@@ -69,6 +69,17 @@ server <- function(input, output) {
     text_json_response <- content(response, as="text")
     raw_data <- fromJSON(text_json_response)
     data <- raw_data[[1]][2][,1]
+    # Go through each vector and check if NULL
+    # If Null create a vector of NAs
+    print(data[["Name"]])
+    print(data[["Status"]])
+    print(data[["Telephone Number"]])
+    print(data[["Company/Organization"]])
+    print(data[["Current Year Hours Count"]])
+    print(data[["Total Hours Served"]])
+    print(data[["2018 Hours"]])
+    print(data[["Email Address"]])
+    print(data[["Birthday"]])
     volunteer_data_n <- data.frame(data[["Name"]],
                                    data[["Status"]],
                                    data[["Telephone Number"]],
@@ -83,7 +94,6 @@ server <- function(input, output) {
                                     "hours_2018", "email", "birthday")
     volunteer_data <- rbind(volunteer_data, volunteer_data_n)
   }
-  volunteer_data
 
    output$distPlot <- renderPlot({
       # generate bins based on input$bins from ui.R
