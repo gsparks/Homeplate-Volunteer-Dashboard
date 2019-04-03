@@ -60,5 +60,6 @@ get_volunteer_data <- function() {
 
     volunteer_data <- rbind(volunteer_data, volunteer_data_n)
   }
+
   return(volunteer_data)
 }
