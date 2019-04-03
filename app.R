@@ -5,7 +5,7 @@ source('get_volunteer_data.R')
 ui <- fluidPage(
 
    # Application title
-   titlePanel("Old Faithful Geyser Data"),
+   titlePanel("Homeplate Volunteer Hours"),
 
    # Sidebar with a slider input for number of bins
    sidebarLayout(
@@ -19,7 +19,7 @@ ui <- fluidPage(
 
       # Show a plot of the generated distribution
       mainPanel(
-         plotOutput("distPlot")
+         plotOutput("hourPlot")
       )
    )
 )
@@ -28,9 +28,9 @@ ui <- fluidPage(
 server <- function(input, output) {
   volunteer_data <- get_volunteer_data()
 
-   output$distPlot <- renderPlot({
+   output$hourPlot <- renderPlot({
       # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2]
+      x    <- volunteer_data[['total_hours']]
       bins <- seq(min(x), max(x), length.out = input$bins + 1)
 
       # draw the histogram with the specified number of bins
