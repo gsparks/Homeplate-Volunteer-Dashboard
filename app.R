@@ -1,15 +1,5 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
-library(httr)
-library(jsonlite)
+source('get_volunteer_data.R')
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -36,64 +26,7 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-  # Get first page of data from Homeplate airtable
-  response <- GET("https://api.airtable.com/v0/apppms4ZuxVLyJySd/Volunteers?maxRecords=10000&view=Master%20List",
-                  query = list(api_key = "keyNaoXggyh686bGO"))
-
-  text_json_response <- content(response, as="text")
-  raw_data <- fromJSON(text_json_response)
-  data <- raw_data[[1]][2][,1]
-  raw_data[['offset']]
-  volunteer_data <- data.frame(data[["Name"]],
-                               data[["Status"]],
-                               data[["Telephone Number"]],
-                               data[["Company/Organization"]],
-                               data[["Current Year Hours Count"]],
-                               data[["Total Hours Served"]],
-                               data[["2018 Hours"]],
-                               data[["Email Address"]],
-                               data[["Birthday"]])
-  colnames(volunteer_data) <- c("name", "status", "phone_number",
-                                "org", "current_year_hours", "total_hours",
-                                "hours_2018", "email", "birthday")
-
-  # While the http headers contain a pagination offset,
-  # continue to fetch and append the next page of data
-  while(!is.null(raw_data[['offset']])) {
-    ofst <- raw_data[['offset']]
-    response <- GET("https://api.airtable.com/v0/apppms4ZuxVLyJySd/Volunteers?maxRecords=10000&view=Master%20List",
-                    query = list(api_key = "keyNaoXggyh686bGO",
-                                 offset = ofst))
-
-    text_json_response <- content(response, as="text")
-    raw_data <- fromJSON(text_json_response)
-    data <- raw_data[[1]][2][,1]
-    # Go through each vector and check if NULL
-    # If Null create a vector of NAs
-    print(data[["Name"]])
-    print(data[["Status"]])
-    print(data[["Telephone Number"]])
-    print(data[["Company/Organization"]])
-    print(data[["Current Year Hours Count"]])
-    print(data[["Total Hours Served"]])
-    print(data[["2018 Hours"]])
-    print(data[["Email Address"]])
-    print(data[["Birthday"]])
-    volunteer_data_n <- data.frame(data[["Name"]],
-                                   data[["Status"]],
-                                   data[["Telephone Number"]],
-                                   data[["Company/Organization"]],
-                                   data[["Current Year Hours Count"]],
-                                   data[["Total Hours Served"]],
-                                   data[["2018 Hours"]],
-                                   data[["Email Address"]],
-                                   data[["Birthday"]])
-    colnames(volunteer_data_n) <- c("name", "status", "phone_number",
-                                    "org", "current_year_hours", "total_hours",
-                                    "hours_2018", "email", "birthday")
-    volunteer_data <- rbind(volunteer_data, volunteer_data_n)
-  }
+  volunteer_data <- get_volunteer_data()
 
    output$distPlot <- renderPlot({
       # generate bins based on input$bins from ui.R
