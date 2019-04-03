@@ -2,4 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-airtable_api_key.rtf
+secrets.R
