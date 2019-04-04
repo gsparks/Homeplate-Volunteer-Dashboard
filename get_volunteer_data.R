@@ -20,16 +20,16 @@ get_volunteer_data <- function() {
   text_json_response <- content(response, as="text")
   raw_data <- fromJSON(text_json_response)
   data <- raw_data[[1]][2][,1]
-  raw_data[['offset']]
-  volunteer_data <- data.frame(data[["Name"]],
-                               data[["Status"]],
-                               data[["Telephone Number"]],
-                               data[["Company/Organization"]],
-                               data[["Current Year Hours Count"]],
-                               data[["Total Hours Served"]],
-                               data[["2018 Hours"]],
-                               data[["Email Address"]],
-                               data[["Birthday"]])
+  volunteer_data <- data.frame(fill_if0(data[["Name"]], data[["Name"]]),
+                               fill_if0(data[["Name"]], data[["Status"]]),
+                               fill_if0(data[["Name"]], data[["Telephone Number"]]),
+                               fill_if0(data[["Name"]], data[["Company/Organization"]]),
+                               fill_if0(data[["Name"]], data[["Current Year Hours Count"]]),
+                               fill_if0(data[["Name"]], data[["Total Hours Served"]]),
+                               fill_if0(data[["Name"]], data[["2018 Hours"]]),
+                               fill_if0(data[["Name"]], data[["Email Address"]]),
+                               fill_if0(data[["Name"]], data[["Birthday"]]))
+
   columns <- c("name", "status", "phone_number",
                "org", "current_year_hours", "total_hours",
                "hours_2018", "email", "birthday")
