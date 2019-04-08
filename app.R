@@ -6,6 +6,22 @@ library(dplyr)
 library(ggthemes)
 
 
+# Pull Volunteer Data
+# Once when the server starts
+source('get_volunteer_data.R')
+volunteer_data <- get_volunteer_data()
+hour_data <- volunteer_data %>% select(name, hours_2018, current_year_hours, total_hours)
+# Melt columns to create years for bar chart
+melted_hours <- melt(data = hour_data,
+                     id.vars = "name",
+                     measure.vars = c('hours_2018', 'current_year_hours', 'total_hours'))
+melted_hours$variable <- as.character(melted_hours$variable)
+melted_hours$name <- as.character(melted_hours$name)
+# Rename the years to be more clear
+melted_hours[melted_hours$variable == 'hours_2018', "variable"] <- '2018'
+melted_hours[melted_hours$variable == 'current_year_hours', "variable"] <- '2019'
+melted_hours[melted_hours$variable == 'total_hours', "variable"] <- 'Total'
+
 header <- dashboardHeader(title = "Homeplate Volunteer Dashboard",
                           titleWidth = 320)
 
@@ -32,21 +48,6 @@ ui <- dashboardPage(
 )
 
 server <- function(input, output) {
-  # Pull Volunteer Data
-  # Once when the server starts
-  source('get_volunteer_data.R')
-  volunteer_data <- get_volunteer_data()
-  hour_data <- volunteer_data %>% select(name, hours_2018, current_year_hours, total_hours)
-  # Melt columns to create years for bar chart
-  melted_hours <- melt(data = hour_data,
-                       id.vars = "name",
-                       measure.vars = c('hours_2018', 'current_year_hours', 'total_hours'))
-  melted_hours$variable <- as.character(melted_hours$variable)
-  melted_hours$name <- as.character(melted_hours$name)
-  # Rename the years to be more clear
-  melted_hours[melted_hours$variable == 'hours_2018', "variable"] <- '2018'
-  melted_hours[melted_hours$variable == 'current_year_hours', "variable"] <- '2019'
-  melted_hours[melted_hours$variable == 'total_hours', "variable"] <- 'Total'
 
   output$hourBar <- renderPlot({
     if(input$volunteer == 'All') {
