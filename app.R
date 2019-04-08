@@ -49,17 +49,30 @@ server <- function(input, output) {
   melted_hours[melted_hours$variable == 'total_hours', "variable"] <- 'Total'
 
   output$hourBar <- renderPlot({
-    ggplot(data = filter(melted_hours, name == input$volunteer), aes(x=variable, y=value, label=value)) +
-      geom_bar(stat="identity") +
-      labs(title="Homeplate Volunteer Hours", y="Hours", x="Year", caption="Hours updated daily.") +
-      theme_economist() +
-      theme(plot.title = element_text(hjust = 0.5)) +
-      stat_summary(aes(label = ..y..),
-                       fun.y = 'sum',
-                       geom = 'text',
-                       col = 'white',
-                       vjust = 1.5)
-   })
+    if(input$volunteer == 'All') {
+      ggplot(data = melted_hours, aes(x=variable, y=value, label=value)) +
+        geom_bar(stat="identity") +
+        labs(title="Homeplate Volunteer Hours", y="Hours", x="Year", caption="Hours updated daily.") +
+        theme_economist() +
+        theme(plot.title = element_text(hjust = 0.5)) +
+        stat_summary(aes(label = ..y..),
+                     fun.y = 'sum',
+                     geom = 'text',
+                     col = 'white',
+                     vjust = 1.5)
+    } else {
+      ggplot(data = filter(melted_hours, name == input$volunteer), aes(x=variable, y=value, label=value)) +
+        geom_bar(stat="identity") +
+        labs(title="Homeplate Volunteer Hours", y="Hours", x="Year", caption="Hours updated daily.") +
+        theme_economist() +
+        theme(plot.title = element_text(hjust = 0.5)) +
+        stat_summary(aes(label = ..y..),
+                         fun.y = 'sum',
+                         geom = 'text',
+                         col = 'white',
+                         vjust = 1.5)
+    }
+  })
 }
 
 # Run the application
