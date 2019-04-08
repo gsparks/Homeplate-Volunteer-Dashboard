@@ -19,8 +19,9 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   fluidRow(
-    box(width = '70%', plotOutput("hourBar")),
-    box(width = '30%')
+    column(8, box(width='70%', plotOutput("hourBar"))),
+    column(4, box(width='30%', selectInput("volunteer", "Volunteer:",
+                                           c('All', as.character(melted_hours$name)))))
   )
 )
 
@@ -41,13 +42,14 @@ server <- function(input, output) {
                        id.vars = "name",
                        measure.vars = c('hours_2018', 'current_year_hours', 'total_hours'))
   melted_hours$variable <- as.character(melted_hours$variable)
+  melted_hours$name <- as.character(melted_hours$name)
   # Rename the years to be more clear
   melted_hours[melted_hours$variable == 'hours_2018', "variable"] <- '2018'
   melted_hours[melted_hours$variable == 'current_year_hours', "variable"] <- '2019'
   melted_hours[melted_hours$variable == 'total_hours', "variable"] <- 'Total'
 
   output$hourBar <- renderPlot({
-    ggplot(data=melted_hours, aes(x=variable, y=value, label=value)) +
+    ggplot(data = filter(melted_hours, name == input$volunteer), aes(x=variable, y=value, label=value)) +
       geom_bar(stat="identity") +
       labs(title="Homeplate Volunteer Hours", y="Hours", x="Year", caption="Hours updated daily.") +
       theme_economist() +
