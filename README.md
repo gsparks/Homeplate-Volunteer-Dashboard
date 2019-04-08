@@ -3,3 +3,5 @@
 A Dashboard for Homeplate Youth Services (https://www.homeplateyouth.org) Volunteers to check their volunteer hour statuses.
 
 Dashboard located here https://homeplate.shinyapps.io/homeplate_volunteer_dashboard//
+
+![Homeplate Volunteer Dashboard](dashboard.png?raw=true "Homeplate Volunteer Dashboard")
