@@ -6,7 +6,8 @@ library(dplyr)
 library(ggthemes)
 
 
-header <- dashboardHeader(title = "Homeplate Volunteer Dashboard")
+header <- dashboardHeader(title = "Homeplate Volunteer Dashboard",
+                          titleWidth = 320)
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
@@ -18,7 +19,8 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   fluidRow(
-    box(plotOutput("hourBar"))
+    box(width = '100%',
+        plotOutput("hourBar"))
   )
 )
 
