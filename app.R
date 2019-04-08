@@ -19,8 +19,8 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   fluidRow(
-    box(width = '100%',
-        plotOutput("hourBar"))
+    box(width = '70%', plotOutput("hourBar")),
+    box(width = '30%')
   )
 )
 
@@ -36,9 +36,15 @@ server <- function(input, output) {
   source('get_volunteer_data.R')
   volunteer_data <- get_volunteer_data()
   hour_data <- volunteer_data %>% select(name, hours_2018, current_year_hours, total_hours)
+  # Melt columns to create years for bar chart
   melted_hours <- melt(data = hour_data,
                        id.vars = "name",
                        measure.vars = c('hours_2018', 'current_year_hours', 'total_hours'))
+  melted_hours$variable <- as.character(melted_hours$variable)
+  # Rename the years to be more clear
+  melted_hours[melted_hours$variable == 'hours_2018', "variable"] <- '2018'
+  melted_hours[melted_hours$variable == 'current_year_hours', "variable"] <- '2019'
+  melted_hours[melted_hours$variable == 'total_hours', "variable"] <- 'Total'
 
   output$hourBar <- renderPlot({
     ggplot(data=melted_hours, aes(x=variable, y=value, label=value)) +
